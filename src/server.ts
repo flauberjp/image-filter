@@ -45,7 +45,7 @@ import {
       return res.status(400).send({ message: "URL is invalid." });
     }
     const processedImgPath: string = await filterImageFromURL(image_url);
-    res.download(processedImgPath, () => deleteLocalFile(processedImgPath));
+    res.sendFile(processedImgPath, () => deleteLocalFile(processedImgPath));
   });
   //! END @TODO1
 
