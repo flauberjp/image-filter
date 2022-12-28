@@ -1,15 +1,18 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import express, { Express } from "express";
+import bodyParser from "body-parser";
+import {
+  filterImageFromURL,
+  deleteLocalFiles,
+  stringIsAValidUrl,
+} from "./util/util";
 
 (async () => {
-
   // Init the Express application
   const app = express();
 
   // Set the network port
   const port = process.env.PORT || 8082;
-  
+
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
@@ -28,19 +31,34 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
   /**************************************************************************** */
-
+  app.get("/filteredimage", async (req, res) => {
+    const { image_url } = req.query;
+    if (typeof image_url !== "string") {
+      return res
+        .status(400)
+        .send({ message: "Query param 'image_url' has to be of type string." });
+    }
+    if (!req.query.image_url) {
+      return res
+        .status(400)
+        .send({ message: "image_url query parameter is missing." });
+    }
+    if (!stringIsAValidUrl(image_url)) {
+      return res.status(400).send({ message: "URL is invalid." });
+    }
+    res.status(200).send(filterImageFromURL(image_url));
+  });
   //! END @TODO1
-  
+
   // Root Endpoint
   // Displays a simple message to the user
-  app.get( "/", async ( req, res ) => {
-    res.send("try GET /filteredimage?image_url={{}}")
-  } );
-  
+  app.get("/", async (req, res) => {
+    res.send("try GET /filteredimage?image_url={{}}");
+  });
 
   // Start the Server
-  app.listen( port, () => {
-      console.log( `server running http://localhost:${ port }` );
-      console.log( `press CTRL+C to stop server` );
-  } );
+  app.listen(port, () => {
+    console.log(`server running http://localhost:${port}`);
+    console.log(`press CTRL+C to stop server`);
+  });
 })();
