@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import bodyParser from "body-parser";
 import {
   filterImageFromURL,
-  deleteLocalFiles,
+  deleteLocalFile,
   stringIsAValidUrl,
 } from "./util/util";
 
@@ -46,7 +46,8 @@ import {
     if (!stringIsAValidUrl(image_url)) {
       return res.status(400).send({ message: "URL is invalid." });
     }
-    res.download(await filterImageFromURL(image_url));
+    const processedImgPath: string = await filterImageFromURL(image_url);
+    res.download(processedImgPath, () => deleteLocalFile(processedImgPath));
   });
   //! END @TODO1
 
