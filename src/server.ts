@@ -46,7 +46,7 @@ import {
     if (!stringIsAValidUrl(image_url)) {
       return res.status(400).send({ message: "URL is invalid." });
     }
-    res.status(200).send(filterImageFromURL(image_url));
+    res.download(await filterImageFromURL(image_url));
   });
   //! END @TODO1
 
