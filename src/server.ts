@@ -44,8 +44,13 @@ import {
     if (!stringIsAValidUrl(image_url)) {
       return res.status(400).send({ message: "URL is invalid." });
     }
-    const processedImgPath: string = await filterImageFromURL(image_url);
-    res.sendFile(processedImgPath, () => deleteLocalFile(processedImgPath));
+    filterImageFromURL(image_url)
+      .then((processedImgPath) =>
+        res.sendFile(processedImgPath, () => deleteLocalFile(processedImgPath))
+      )
+      .catch((error) =>
+        res.status(400).send({ message: error.message, stack: error.stack })
+      );
   });
   //! END @TODO1
 

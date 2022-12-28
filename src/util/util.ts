@@ -25,7 +25,7 @@ export async function filterImageFromURL(inputURL: string): Promise<string> {
         .write(outpath, (img) => {
           resolve(outpath);
         });
-    } catch (error) {
+    } catch (error: any) {
       reject(error);
     }
   });
