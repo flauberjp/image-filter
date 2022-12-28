@@ -49,7 +49,7 @@ import {
         res.sendFile(processedImgPath, () => deleteLocalFile(processedImgPath))
       )
       .catch((error) =>
-        res.status(400).send({ message: error.message, stack: error.stack })
+        res.status(422).send({ message: error.message, stack: error.stack })
       );
   });
   //! END @TODO1
